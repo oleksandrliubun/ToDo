@@ -61,7 +61,6 @@ namespace ToDo.Controllers
 
         public async Task<IActionResult> Create(string returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
             return View();
         }
 

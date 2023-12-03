@@ -1,0 +1,86 @@
+﻿@model IEnumerable<ToDo.Models.TaskViewModels.TaskViewModel>
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="w-25 input-group mb-3">
+    <input id="search" type="text" class="form-control" placeholder="Search" aria-describedby="basic-addon2" onchange="search()">
+    <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" onchange="search()">Button</button>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IsCompleted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DueDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsImportant)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="@item.Id" class="@(item.DueDate <= DateTime.Now && !item.IsCompleted ? "bg-warning text-white" : "")">
+                <td>
+                    @if (item.IsCompleted)
+                    {
+                        <input onclick="completeTask(@item.Id)" checked class="check-box" type="checkbox">
+                    }
+                    else
+                    {
+                        <input onclick="completeTask(@item.Id)" class="check-box" type="checkbox">
+                    }
+                </td>
+                <td style="col-small">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsImportant)
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-sm" asp-action="Edit" asp-route-id="@item.Id" asp-route-returnurl="@Context.Request.Path">Edit</a>
+                    <button class="btn btn-danger btn-sm" onclick="deleteTask(@item.Id)" asp-route-id="@item.Id">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function completeTask(id) {
+        taskAction(id, "Patch", "Complete");
+    }
+    function deleteTask(id) {
+        taskAction(id, "Delete", "Delete");
+    }
+    function search(e) {
+        window.location.replace(window.location.pathname + "?q=" + $("#search").val());
+    }
+    function taskAction(id, method, action) {
+        $.ajax({
+            type: method,
+            url: "/Home/" + action + "/" + id,
+            success: function () {
+                $("#" + id).remove();
+            },
+            fail: function () {
+                $("#" + id).show();
+            }
+        });
+    }
+</script>

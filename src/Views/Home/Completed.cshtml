@@ -1,0 +1,9 @@
+﻿@model IEnumerable<ToDo.Models.TaskViewModels.TaskViewModel>
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = "Completed";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@await Html.PartialAsync("_Tasks")

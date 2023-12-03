@@ -1,0 +1,13 @@
+﻿@model IEnumerable<ToDo.Models.TaskViewModels.TaskViewModel>
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = "Important";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary" asp-route-returnurl="@Context.Request.Path">Create</a>
+</p>
+
+@await Html.PartialAsync("_Tasks")
